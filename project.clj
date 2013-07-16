@@ -4,6 +4,9 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [ 
+                  [org.apache.lucene/lucene-analyzers-common "4.2.0"]
+                  [org.apache.lucene/lucene-core "4.2.0"]
+                  [org.apache.lucene/lucene-queries "4.2.0"]
                   [cheshire "5.2.0"]
                   [ring "1.2.0"]
                   [compojure "1.1.5"]
