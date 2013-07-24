@@ -12,8 +12,7 @@
                   [ring "1.2.0"]
                   [compojure "1.1.5"]
                   [org.clojure/clojure "1.5.1"]]
-  :plugins [[lein-daemon "0.5.4"]]
 
-  :daemon {:name-of-service {:ns jsondb.core
-                             :pidfile "../shared/pmenu.pid"}})
+  :daemon {:pmenu {:ns jsondb.core
+                   :pidfile "../shared/pmenu.pid"}})
 
