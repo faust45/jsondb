@@ -9,7 +9,7 @@
 (defn handler [request]
   {:status 200
    :headers {"Content-Type" "text/html"}
-   :body "Hello "})
+   :body "Hello World"})
 
 (def my-routes 
   (routes (GET "/search" [] handler)))
