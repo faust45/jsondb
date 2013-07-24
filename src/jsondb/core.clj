@@ -19,5 +19,5 @@
       wrap-reload
       (wrap-file "public")))
 
-(defn main []
+(defn -main []
   (run-jetty app {:port 3000}))
