@@ -14,5 +14,5 @@
                   [org.clojure/clojure "1.5.1"]]
 
   :daemon {:pmenu {:ns jsondb.core
-                   :pidfile "../shared/pmenu.pid"}})
+                   :pidfile "/var/www/PersonalMenu/shared/pids/pmenu.pid"}})
 
