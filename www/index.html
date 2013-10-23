@@ -1,0 +1,66 @@
+<html ng-app="PersonalMenu">
+    <head>
+        <title>Admin Area</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv ="Content-Type" content="text/html;charset=utf-8">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+        <link href="css/app.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.js"></script>
+        <script src="js/libs/ui-bootstrap-0.6.0.js"></script>
+        <script src="js/libs/ui-utils.js"></script>
+        <script src="js/libs/file.js"></script>
+        <script src="js/db.js"></script>
+        <script src="js/app.js"></script>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <div class="header">
+                <ul class="nav nav-pills pull-right">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+                <h3 class="text-muted">Menu</h3>
+            </div>
+
+            <div class="row" ng-controller="MenuCtrl">
+                <div class="col-md-2" >
+                    <ul class="nav nav-pills nav-stacked">
+                        <li ng-repeat="item in menu.items">
+                          <a href="#{{item.title}}">{{item.title | normalize}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-10">
+                    <div ng-repeat="cat in menu.items">
+                        <div class="alert alert-{{colorOn($index)}}">
+                          <a name="{{cat.title}}" ng-model="cat.title" contenteditable>{{cat.title | normalize}}</a> 
+                        </div>
+
+                        <table class="table table-striped">
+                            <colgroup>
+                                <col style="width:70;" />
+                            </colgroup>
+                            <tbody>
+                                <tr ng-repeat="item in cat.items" class="thumbs">
+                                    <td> 
+                                        <div ng-model="item.photos" class="thumbnail" filedrag>
+                                            <img src="{{item.photos | smallphoto}}" />
+                                        </div>
+                                    </td>
+                                    <td ng-model="item.title"  contenteditable> {{item.title}}  </td>
+                                    <td ng-model="item.desc"   contenteditable> {{item.desc}}   </td>
+                                    <td ng-model="item.weight" contenteditable> {{item.weight}} </td>
+                                    <td ng-model="item.price"  contenteditable> {{item.price}}  </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

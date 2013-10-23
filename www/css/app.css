@@ -1,0 +1,23 @@
+/* Space out content a bit */
+body {
+}
+
+.container-fluid {
+  margin-right: 15px;
+  margin-left: 10px;
+  max-width: 1600px; /* or 950px */
+}
+
+.header {
+  margin-bottom: 4em;
+}
+
+.drag-over {
+    background-color: blue !important;
+    border: 1px solid green  !important;
+}
+
+.thumbnail img {
+  max-width: 4em;
+  max-height: 4em;
+}

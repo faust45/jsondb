@@ -12,3 +12,8 @@ pom.xml.asc
 .lein-failures
 .lein-plugins
 .lein-repl-history
+resources
+db
+www/uploads
+src/jsondb/db-off.clj
+data
