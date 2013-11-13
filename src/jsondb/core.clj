@@ -1,13 +1,15 @@
 (ns jsondb.core
+  (:require [jsondb.session :as session])
+  (:use jsondb.auth)
   (:require [jsondb.imgio :as imgio])
   (:require [jsondb.models  :as models])
-  (:require [jsondb.actions :as actions])
+  ;(:require [jsondb.actions :as actions])
   (:require [clojure.string :as s])
   (:require [cheshire.core :refer :all])
   (:require [jsondb.utils :as utils])
   (:require [ring.util.response :as resp])
   (:use ring.adapter.jetty)
-  (:use ring.middleware.resource ring.middleware.file-info ring.middleware.file ring.middleware.reload)
+  (:use ring.middleware.resource ring.middleware.session ring.middleware.file-info ring.middleware.file ring.middleware.reload  ring.middleware.multipart-params)
   (:use compojure.core)
   (:require [jsondb.db :as db])
   (:gen-class))
@@ -15,28 +17,46 @@
 
 (defn upload
   [file label]
-  ((comp utils/json-resp (partial apply merge) (partial map #(actions/process-images % file))) (label models/images)))
+  )
+
+(defn auth
+  [email password]
+  (println "debug: " email password)
+  (let [user (models/auth-user email password)]
+    (println "debug auth" user)
+    (if user
+      (merge {:session email} (utils/json-resp "success"))
+      (utils/json-resp "fail"))))
+
+;(defsigned admin
+;  [req]
+;  (resp/file-response "index.html" {:root "www"}))
 
 (defn places
-  [req])
+  [s]
+  (println "DEBUG SESSION:" s)
+  {:session "Love"})
 
 (defn place
   [id q]
-  (->> id db/g utils/json-resp))
+  (->> id models/places utils/json-resp))
 
 (defn update-place
   [doc]
-  (utils/json-resp (db/save doc)))
+  (utils/json-resp 2))
 
 (def my-routes
-  (routes (GET  "/places/:id" [id :as {q :query-string}] (place id q))
+  (routes (GET  "/places/:id" [id :as {q :query-string session :session}] (place id q))
           (POST "/places" [:as {doc :doc}] (update-place doc))
           (POST "/upload/:image-type" [image-type :as {file :tempfile}] (upload file (keyword image-type)))
-          (GET  "/places" [] places)))
+          (GET  "/login"  [] (resp/file-response "login.html" {:root "www"}))
+          (POST "/login"  [email password] (auth email password))))
 
 (def app
   (-> my-routes
       wrap-reload
+      wrap-multipart-params
+      (wrap-session {:store (session/store "db/sessions.db")})
       utils/wrap-parse-json
       utils/wrap-upload-file
       (wrap-file "www/")))

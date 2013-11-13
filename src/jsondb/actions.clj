@@ -13,39 +13,27 @@
 
 (def upload-dir "www/uploads")
 
-(defn add-id
-  [image]
-  (assoc image :id (-> :label image name (str "_" (utils/gen-id)))))
+(defn id
+  [[label _]]
+  (-> label name (str "_" (utils/gen-id))))
 
 (defn s3
-  [image]
-  (s3/put-object cred bucket (:id image) (:file image))
-  image)
+  [dir id file]
+  (let [path (str bucket "/" dir)]
+    (s3/put-object cred path id file)
+    (s3/update-object-acl cred path id (s3/grant :all-users :read))))
 
-(defn acl
-  [image]
-  (s3/update-object-acl cred bucket (:id image) (s3/grant :all-users :read))
-  image)
-
-(defn prepare
-  [{:keys [label id]}]
-  {label id})
-
-(def send-to-s3
-  (comp acl s3 add-id))
-      
 (def resize
-  (comp prepare send-to-s3 (partial imgio/as-stream "jpg") (partial imgio/resize)))
+  (comp (partial imgio/as-stream "jpg") (partial imgio/resize)))
 
 (defn save-original
-  [[label _] file]
-  (let [fname (str upload-dir "/" (name label) "_" (utils/gen-id) (utils/file-ext file))]
-    (do (io/copy file (io/file fname))
-        {label fname})))
+  [id file]
+  (io/copy file (io/file (str upload-dir "/" id))))
 
 (defn process-images
-  [[label _ :as image] file]
-  (if (= label :original)
-    (save-original image file)
-    (resize image file)))
+  [[label _ :as opt] file place]
+  (let [id (id opt)]
+    (if (= label :original)
+      (save-original id file)
+      (->> file (resize opt) (s3 (str place) id)))))
 

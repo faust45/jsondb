@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv ="Content-Type" content="text/html;charset=utf-8">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+        <link href="css/sign.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+
+            <form class="form-signin" action="/login" method="POST" enctype="multipart/form-data">
+                <h2 class="form-signin-heading">Please sign in</h2>
+                <input type="text" name="email" autofocus="" placeholder="Email address" class="form-control">
+                <input type="password" name="password" placeholder="Password" class="form-control">
+                <label class="checkbox">
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
+            </form>
+
+        </div>
+    </body>
+</html>

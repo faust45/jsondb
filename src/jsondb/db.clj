@@ -4,43 +4,66 @@
   (:require [jsondb.classifier :as cl])
   (:require [clojure.data.json :as json]))
 
-
-(def db-path "db/dev.db")
-(def index-path "db/dev.index")
-
-(def mdb
-  (.make (doto (org.mapdb.DBMaker/newFileDB (java.io.File. "db/testdb"))
-               (.closeOnJvmShutdown)
-               (.encryptionEnable "password"))))
-
-(defn coll
-  [name]
-  (.getTreeMap mdb name))
-
-(def coll-all
-  (coll "all"))
-
-(defn gen-id
+(defn id
   []
   (str (-> (java.util.Date.) .getTime) (int (* (rand) 100))))
 
-(defn add-id
-  [{id "_id" :as doc}]
-  (if id 
-    doc
-    (assoc doc "_id" (gen-id))))
+(deftype Collection [db collection]
+  clojure.lang.ISeq
+    (next [this]
+      (next (seq this)))
+    (first [this]
+      (first (seq this)))
+  clojure.lang.Seqable
+    (seq [this] 
+      (seq (.values collection)))
+  clojure.lang.IFn
+    (invoke
+      [this k]
+      (if k (.get collection (str k))))
+    (invoke
+      [this k v]
+      (let [key (or k (id))]
+        (.put collection (str key) v)
+        (.commit db)
+        key))
+  Object
+    (toString [this] collection))
 
-(defn save
-  [doc]
-  (let [{id "_id" :as doc1} (-> doc add-id)]
-    (.put coll-all id doc1)
-    (.commit mdb)
-    id))
 
-(defn g 
-  [id]
-  (.get coll-all id))
+(defn open
+  [path]
+  (let [db (.make (doto (org.mapdb.DBMaker/newFileDB (java.io.File. path))
+                    (.closeOnJvmShutdown)))]
+    db))
 
-(defn lo
+(def default (open "db/testdbdd"))
+
+(defn collection
+  ([coll-name]
+    (collection default coll-name))
+  ([db coll-name]
+    (collection db coll-name org.mapdb.Serializer/JAVA))
+  ([db coll-name serializer]
+    (let [m (.makeOrGet (doto (.createHashMap db coll-name) (.valueSerializer serializer)))]
+      (Collection. db m))))
+
+(def collections (atom {}))
+
+(defn collection-by-name
+  [collection-name]
+  (let [coll (or (@collections collection-name)
+                 (collection collection-name))]
+    (swap! collections assoc collection-name coll)
+    coll))
+
+(defn values
   []
-  (-> "db/1.json" slurp json/read-str))
+  (.getTreeMap default "users"))
+
+
+;(defn lo
+;  []
+;  (-> "db/1.json" slurp json/read-str))
+
+

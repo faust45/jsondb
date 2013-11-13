@@ -1,10 +1,12 @@
 (defproject jsondb "0.1.0-SNAPSHOT"
-  :main jsondb.core
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [ 
+                  [inflections "0.9.4"]
+                  [com.taoensso/nippy "2.5.0-beta3"]
+                  [org.mindrot/jbcrypt "0.3m"]
                   [sonian/carica "1.0.3"]
                   [clj-aws-s3 "0.3.7"]
                   [org.imgscalr/imgscalr-lib "4.2"]
