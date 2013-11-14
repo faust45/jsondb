@@ -9,49 +9,27 @@
 ;(def users  (db/collection db/default "users"))
 
 (defprotocol Model
-  (id [this])
-  (on-create [this])
-  (on-update [this])
-  (valid? [this]))
+  (prepare [this])
+  (update  [this attrs])
+  (valid?  [this]))
 
 (defn collection-name
   [model]
   (->> model class str (re-find #"\w+$")))
 
+(def collection (comp db/collection-by-name collection-name))
+
 (defn save
   [model]
-  (let [id   (id model)
-        coll (collection-name model)]
-    ((db/collection-by-name coll) id model)))
+  ((collection model) (:id model) model))
 
 (defn create
   [model]
   (if-let [errors (valid? model)]
     errors
-    (save model)))
+    (-> model on-create save)))
 
-(def coll
-  (db/collection "data"))
 
-;(defn valid-user?
-;  [doc]
-;  (and (:email doc)
-;       (:encrypted_password doc)))
-;
-;(def user-keep-attrs [:email :encrypted_password])
-;(defn before-create
-;  )
-;
-;  ;[new-doc old-doc]
-;  ;(merge new-doc (select-keys old-doc [:email :encrypted_password])))
-;
-;(defn update-user
-;  [new-doc]
-;  (if-let [old-doc (users (:email new-doc))]
-;    (let [doc (prepare-user new-doc old-doc)]
-;      (if (valid-user? doc)
-;        (users (:email doc) doc)))))
-;
 ;(defn create-user
 ;  [email password]
 ;  (let [doc {:email email :encrypted_password (utils/encrypt password)}]

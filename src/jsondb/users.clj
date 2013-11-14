@@ -1,31 +1,22 @@
 (ns jsondb.users
+  (require [jsondb.utils :as utils])
   (use clj-stacktrace.core)
   (require jsondb.models)
   (import jsondb.models.Model))
 
+(defn- crypt-pass
+  [user]
+  (->> (:password user) utils/encrypt (assoc user :encrypted_password)))
 
 (defrecord User [id]
-  Model 
-  (id [this] 101)
-  (valid? [this] true))
+  Model
+  (valid? [this] true)
+  (on-update [this attrs]
+    (->> (dissoc attrs :encrypted_password :email) (merge this)))
+  (on-create [this]
+    (if (:password this)
+      (-> this crypt-pass (dissoc :password) (assoc :id (:email this))))))
 
-(defn user
+(defn new
   [attrs]
   (map->User attrs))
-
-(defn create
-  []
-  (try 
-    (jsondb.models/coll 1 (user {:name "Alexa"}))
-    (catch Exception e 
-      (parse-exception e))))
-;(defmacro defmodel
-;  [type]
-;  )
-
-;(defmodel User
-;  {:id :email}
-;  (valid? [this] true)
-;  (on-create [this]))
-;
-;create (User. {:name "Alexa"})
