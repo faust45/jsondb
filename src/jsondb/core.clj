@@ -3,6 +3,8 @@
   (:use jsondb.auth)
   (:require [jsondb.imgio :as imgio])
   (:require [jsondb.models  :as models])
+  (require jsondb.users)
+  (import jsondb.users.User)
   ;(:require [jsondb.actions :as actions])
   (:require [clojure.string :as s])
   (:require [cheshire.core :refer :all])
@@ -21,9 +23,7 @@
 
 (defn auth
   [email password]
-  (println "debug: " email password)
-  (let [user (models/auth-user email password)]
-    (println "debug auth" user)
+  (let [user (models/auth User email password)]
     (if user
       (merge {:session email} (utils/json-resp "success"))
       (utils/json-resp "fail"))))
@@ -39,7 +39,8 @@
 
 (defn place
   [id q]
-  (->> id models/places utils/json-resp))
+  ;(->> id models/places utils/json-resp))
+  )
 
 (defn update-place
   [doc]

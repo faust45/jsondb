@@ -4,6 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [ 
+                  [com.novemberain/validateur "1.2.0"]
                   [inflections "0.9.4"]
                   [com.taoensso/nippy "2.5.0-beta3"]
                   [org.mindrot/jbcrypt "0.3m"]

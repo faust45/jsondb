@@ -43,7 +43,7 @@
   ([coll-name]
     (collection default coll-name))
   ([db coll-name]
-    (collection db coll-name org.mapdb.Serializer/JAVA))
+    (collection db coll-name (jsondb.serializer.Map.)))
   ([db coll-name serializer]
     (let [m (.makeOrGet (doto (.createHashMap db coll-name) (.valueSerializer serializer)))]
       (Collection. db m))))
