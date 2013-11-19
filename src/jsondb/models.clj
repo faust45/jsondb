@@ -29,6 +29,17 @@
 
 (def collection (comp db/collection-by-name collection-name))
 
+(defn get
+  [klass id]
+  ((collection klass) id))
+
+(defn all
+  ([klass]
+    (all klass {}))
+  ([klass options]
+    (let [limit (or (:limit options) 10)]
+      (->> klass collection (take limit)))))
+
 (defn save
   [model]
   ((collection model) (:id model) model)

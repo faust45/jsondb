@@ -11,7 +11,7 @@
   (:require [jsondb.utils :as utils])
   (:require [ring.util.response :as resp])
   (:use ring.adapter.jetty)
-  (:use ring.middleware.resource ring.middleware.session ring.middleware.file-info ring.middleware.file ring.middleware.reload  ring.middleware.multipart-params)
+  (:use ring.middleware.session ring.middleware.file-info ring.middleware.file ring.middleware.reload  ring.middleware.multipart-params)
   (:use compojure.core)
   (:require [jsondb.db :as db])
   (:gen-class))
@@ -23,24 +23,20 @@
 
 (defn auth
   [email password]
-  (let [user (models/auth User email password)]
-    (if user
-      (merge {:session email} (utils/json-resp "success"))
-      (utils/json-resp "fail"))))
+  (if-let [user (models/auth User email password)]
+      (-> (resp/redirect "/admin") (assoc :session (:id user)))
+      (utils/json-resp "fail")))
 
-;(defsigned admin
-;  [req]
-;  (resp/file-response "index.html" {:root "www"}))
+(defsigned admin
+  (resp/file-response "index.html" {:root "www"}))
 
 (defn places
   [s]
-  (println "DEBUG SESSION:" s)
-  {:session "Love"})
+  (-> (models/all Place) utils/json-resp))
 
 (defn place
   [id q]
-  ;(->> id models/places utils/json-resp))
-  )
+  (->> id (models/get Place) utils/json-resp))
 
 (defn update-place
   [doc]
@@ -51,6 +47,7 @@
           (POST "/places" [:as {doc :doc}] (update-place doc))
           (POST "/upload/:image-type" [image-type :as {file :tempfile}] (upload file (keyword image-type)))
           (GET  "/login"  [] (resp/file-response "login.html" {:root "www"}))
+          (GET  "/admin"  [] admin)
           (POST "/login"  [email password] (auth email password))))
 
 (def app

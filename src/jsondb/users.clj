@@ -3,7 +3,7 @@
   (require [jsondb.utils :as utils])
   (use clj-stacktrace.core)
   (require jsondb.models)
-  (import (jsondb.models Errors Model Auth)))
+  (import (jsondb.models Model Auth)))
 
 (defn- crypt-pass
   [user]
