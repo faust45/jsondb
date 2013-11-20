@@ -2,9 +2,11 @@
   (:require [jsondb.session :as session])
   (:use jsondb.auth)
   (:require [jsondb.imgio :as imgio])
-  (:require [jsondb.models  :as models])
+  (:require [jsondb.models :as models])
   (require jsondb.users)
   (import jsondb.users.User)
+  (require jsondb.places)
+  (import jsondb.places.Place)
   ;(:require [jsondb.actions :as actions])
   (:require [clojure.string :as s])
   (:require [cheshire.core :refer :all])
@@ -29,6 +31,9 @@
 
 (defsigned admin
   (resp/file-response "index.html" {:root "www"}))
+
+(m/create (place/new {(:id current-user)}))
+(m/create current-user (place {}))
 
 (defn places
   [s]

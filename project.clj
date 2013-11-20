@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [ 
                   [com.novemberain/validateur "1.2.0"]
-                  [inflections "0.9.4"]
+                  [inflections "0.9.5"]
                   [com.taoensso/nippy "2.5.0-beta3"]
                   [org.mindrot/jbcrypt "0.3m"]
                   [sonian/carica "1.0.3"]

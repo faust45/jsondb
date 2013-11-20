@@ -6,10 +6,6 @@
 
 (def ^:dynamic current-user)
 
-(defmacro defaction 
-  [mname auth args body]
-  )
-
 (defmacro defsigned
   [mname & body]
   `(defn ~mname [req#]
