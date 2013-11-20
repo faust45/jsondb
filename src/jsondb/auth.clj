@@ -7,10 +7,11 @@
 (def ^:dynamic current-user)
 
 (defmacro defsigned
-  [mname & body]
-  `(defn ~mname [req#]
-     (if-let [user# (models/get User (:session req#))]
-       (binding [current-user user#] ~@body)
-       (redirect "/login"))))
+  [mname params & body]
+  `(let [f# (fn ~params ~@body)]
+     (defn ~mname [req# & params#]
+        (if-let [user# (models/get User (:session req#))]
+          (binding [current-user user#] (apply f# params#))
+          (redirect "/login")))))
 
 
