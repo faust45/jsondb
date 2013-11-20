@@ -62,8 +62,8 @@
   (.getTreeMap default "users"))
 
 
-;(defn lo
-;  []
-;  (-> "db/1.json" slurp json/read-str))
+(defn lo
+  []
+  (-> "db/1.json" slurp json/read-str clojure.walk/keywordize-keys))
 
 

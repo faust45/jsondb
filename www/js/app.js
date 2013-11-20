@@ -26,14 +26,18 @@ app.filter('smallphoto', function() {
 });
 
 
-function MenuCtrl($scope, Data) {
+function MenuCtrl($scope, User, Place) {
     var menuChanged = false;
     $scope.editMode = false;
-    $scope.menu = Data.get({"id": "37154664585"}, function() {
-        $scope.$watch('menu', function (value) {
-            menuChanged = true;
-        }, true);
+    var profile = User.profile(function() {
+        $scope.menu = Place.get({id: profile.places[0]}, function(place) {
+        });
     });
+    return;
+
+     
+
+    var colors = ['success', 'info', 'warning', 'danger'];
 
     var colors = ['success', 'info', 'warning', 'danger'];
     $scope.colorOn = function(index) {

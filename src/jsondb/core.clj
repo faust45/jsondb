@@ -30,25 +30,28 @@
       (utils/json-resp "fail")))
 
 (defsigned admin
+  []
   (resp/file-response "index.html" {:root "www"}))
 
-(m/create (place/new {(:id current-user)}))
-(m/create current-user (place {}))
+(defsigned admin-place
+  [id]
+  (-> (models/get Place id) utils/json-resp))
 
-(defn places
-  [s]
-  (-> (models/all Place) utils/json-resp))
+(defsigned admin-profile
+  []
+  (-> current-user utils/json-resp))
 
-(defn place
-  [id q]
-  (->> id (models/get Place) utils/json-resp))
-
-(defn update-place
-  [doc]
-  (utils/json-resp 2))
-
+;(defn place
+;  [id q]
+;  (->> id (models/get Place) utils/json-resp))
+;
+;(defn update-place
+;  [doc]
+;  (utils/json-resp 2))
+;
 (def my-routes
-  (routes (GET  "/places/:id" [id :as {q :query-string session :session}] (place id q))
+  (routes (GET  "/admin/places/:id" [id :as req] (admin-place req id))
+          (GET  "/admin/profile" [] admin-profile)
           (POST "/places" [:as {doc :doc}] (update-place doc))
           (POST "/upload/:image-type" [image-type :as {file :tempfile}] (upload file (keyword image-type)))
           (GET  "/login"  [] (resp/file-response "login.html" {:root "www"}))

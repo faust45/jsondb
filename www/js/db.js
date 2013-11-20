@@ -1,12 +1,21 @@
 l = console.log;
 
 var app = angular.module("PersonalMenuServices", ['ngResource']);
-app.factory("Data", DB);
+app.factory("Place", Place);
+app.factory("User", User);
 
-function DB($resource) {
+
+function User($resource) {
+    return $resource("/admin/profile",
+            {}, 
+            {'profile':  {method:'GET', isArray:false}});
+}
+
+function Place($resource) {
     var options = {
     };
-    var Doc = $resource("/places/:id");
-
+    var Doc = $resource("/admin/places/:id",
+                {id: '@id'}, {});
+    
     return Doc;
-}
+};
