@@ -29,7 +29,7 @@ files.directive('filedrag', function ($parse) {
                   
                 req.upload.onprogress  = onprogress;
                 req.onreadystatechange = onreadystatechange;
-                req.open("POST", '/upload/dishes', true);
+                req.open("POST", '/admin/upload/dishes', true);
                 req.setRequestHeader("Content-Type",  'application/octet-stream');
                 req.setRequestHeader("X-File-Name",  file.name);
 

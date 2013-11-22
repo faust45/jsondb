@@ -39,14 +39,13 @@
     {:label label :file out}))
 
 (defn as-stream
-  [ext [label buffered-image]]
+  [buffered-image ext]
   (let [baos (java.io.ByteArrayOutputStream.)]
     (ImageIO/write buffered-image ext baos)
-    {:label label :file (java.io.ByteArrayInputStream. (.toByteArray baos))}))
+    (java.io.ByteArrayInputStream. (.toByteArray baos))))
 
 (defn resize
-  [[label [width height]] file]
-  (println "debug in resize" [label width height] file)
-  [label (Scalr/resize (buffered-image file) automatic width height nil)])
+  [file [label [width height]]]
+  (Scalr/resize (buffered-image file) automatic width height nil))
 
 

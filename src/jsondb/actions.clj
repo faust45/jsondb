@@ -18,13 +18,9 @@
   (-> label name (str "_" (utils/gen-id))))
 
 (defn s3
-  [dir id file]
-  (let [path (str bucket "/" dir)]
-    (s3/put-object cred path id file)
-    (s3/update-object-acl cred path id (s3/grant :all-users :read))))
-
-(def resize
-  (comp (partial imgio/as-stream "jpg") (partial imgio/resize)))
+  [file id]
+  (s3/put-object cred bucket id file)
+  (s3/update-object-acl cred bucket id (s3/grant :all-users :read)))
 
 (defn save-original
   [id file]
@@ -32,8 +28,9 @@
 
 (defn process-images
   [[label _ :as opt] file place]
-  (let [id (id opt)]
+  (let [id (->> opt id (str place "/"))]
     (if (= label :original)
-      (save-original id file)
-      (->> file (resize opt) (s3 (str place) id)))))
+      () ;(save-original id file)
+      (-> file (imgio/resize opt) (imgio/as-stream "jpg") (s3 id)))
+    {label id}))
 

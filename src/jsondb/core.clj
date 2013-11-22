@@ -7,7 +7,7 @@
   (import jsondb.users.User)
   (require jsondb.places)
   (import jsondb.places.Place)
-  ;(:require [jsondb.actions :as actions])
+  (:require [jsondb.actions :as actions])
   (:require [clojure.string :as s])
   (:require [cheshire.core :refer :all])
   (:require [jsondb.utils :as utils])
@@ -19,9 +19,9 @@
   (:gen-class))
 
 
-(defn upload
+(defsigned upload
   [file label]
-  )
+  (->> (models/images label) (map #(actions/process-images % file 1)) (apply merge) utils/json-resp))
 
 (defn auth
   [email password]
@@ -45,15 +45,15 @@
 ;  [id q]
 ;  (->> id (models/get Place) utils/json-resp))
 ;
-;(defn update-place
-;  [doc]
-;  (utils/json-resp 2))
-;
+(defn update-place
+  [id doc]
+  (utils/json-resp 2))
+
 (def my-routes
   (routes (GET  "/admin/places/:id" [id :as req] (admin-place req id))
           (GET  "/admin/profile" [] admin-profile)
-          (POST "/places" [:as {doc :doc}] (update-place doc))
-          (POST "/upload/:image-type" [image-type :as {file :tempfile}] (upload file (keyword image-type)))
+          (POST "/admin/places/:id" [id :as req] (update-place req id (:doc req)))
+          (POST "/admin/upload/:image-type" [image-type :as req] (upload req (:tempfile req) (keyword image-type)))
           (GET  "/login"  [] (resp/file-response "login.html" {:root "www"}))
           (GET  "/admin"  [] admin)
           (POST "/login"  [email password] (auth email password))))
