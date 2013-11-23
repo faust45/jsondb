@@ -41,13 +41,11 @@
   []
   (-> current-user utils/json-resp))
 
-;(defn place
-;  [id q]
-;  (->> id (models/get Place) utils/json-resp))
-;
-(defn update-place
+(defsigned update-place
   [id doc]
-  (utils/json-resp 2))
+  (let [old (models/get Place id) 
+        d (clojure.walk/keywordize-keys doc)]
+    (-> (jsondb.places/new d) (models/update old) utils/json-resp)))
 
 (def my-routes
   (routes (GET  "/admin/places/:id" [id :as req] (admin-place req id))

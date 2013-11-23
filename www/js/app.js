@@ -31,12 +31,12 @@ function MenuCtrl($scope, User, Place) {
     $scope.editMode = false;
     var profile = User.profile(function() {
         $scope.menu = Place.get({id: profile.places[0]}, function(place) {
+            $scope.$watch('menu', function() {
+                 menuChanged = true;
+            }, true);
         });
     });
-    return;
-
      
-
     var colors = ['success', 'info', 'warning', 'danger'];
 
     var colors = ['success', 'info', 'warning', 'danger'];
@@ -49,7 +49,7 @@ function MenuCtrl($scope, User, Place) {
             menuChanged = false;
             angular.copy($scope.menu).$save();
         }
-    }, 5000);
+    }, 3000);
 };
 
 app.directive('contenteditable', function($compile) {

@@ -67,8 +67,8 @@
     (assoc model :id (utils/gen-id))))
 
 (defn update
-  [model attrs]
-  (model-> model (valid-on? :update) (before-update attrs) save))
+  [model old-model]
+  (model-> model (valid-on? :update) (before-update old-model) save))
 
 (defn conj-attr
   [model attr value]

@@ -13,7 +13,7 @@
 (defrecord Place [id]
   Model
   (validations [this] valid-place)
-  (before-update [this attrs] this)
+  (before-update [this old] this)
   (before-create [this] this))
 
 (defn new
