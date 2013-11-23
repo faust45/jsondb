@@ -7,6 +7,7 @@ files.directive('filedrag', function ($parse) {
         restrict: 'A',
         require: '?ngModel',
         link: function (scope, elem, attrs, ngModel) {
+             var placeID = attrs.placeId;
         //    l("debug", attr.ngModel, $scope.$parent.$eval(attr.ngModel));
         function dragOver(e) {
             e.stopPropagation();
@@ -29,7 +30,7 @@ files.directive('filedrag', function ($parse) {
                   
                 req.upload.onprogress  = onprogress;
                 req.onreadystatechange = onreadystatechange;
-                req.open("POST", '/admin/upload/dishes', true);
+                req.open("POST", '/admin/upload/'+placeID+'/dishes', true);
                 req.setRequestHeader("Content-Type",  'application/octet-stream');
                 req.setRequestHeader("X-File-Name",  file.name);
 

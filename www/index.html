@@ -47,7 +47,7 @@
                             <tbody>
                                 <tr ng-repeat="item in cat.items" class="thumbs">
                                     <td> 
-                                        <div ng-model="item.photos" class="thumbnail" filedrag>
+                                        <div place-id="{{menu.id}}" ng-model="item.photos" class="thumbnail" filedrag>
                                             <img src="{{item.photos | smallphoto}}" />
                                         </div>
                                     </td>

@@ -20,8 +20,8 @@
 
 
 (defsigned upload
-  [file label]
-  (->> (models/images label) (map #(actions/process-images % file 1)) (apply merge) utils/json-resp))
+  [id file label]
+  (->> (models/images label) (map #(actions/process-images % file id)) (apply merge) utils/json-resp))
 
 (defn auth
   [email password]
@@ -51,7 +51,7 @@
   (routes (GET  "/admin/places/:id" [id :as req] (admin-place req id))
           (GET  "/admin/profile" [] admin-profile)
           (POST "/admin/places/:id" [id :as req] (update-place req id (:doc req)))
-          (POST "/admin/upload/:image-type" [image-type :as req] (upload req (:tempfile req) (keyword image-type)))
+          (POST "/admin/upload/:id/:image-type" [id image-type :as req] (upload req id (:tempfile req) (keyword image-type)))
           (GET  "/login"  [] (resp/file-response "login.html" {:root "www"}))
           (GET  "/admin"  [] admin)
           (POST "/login"  [email password] (auth email password))))
