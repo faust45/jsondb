@@ -8,7 +8,14 @@
   []
   (str (-> (java.util.Date.) .getTime) (int (* (rand) 100))))
 
+(defprotocol MCollection 
+  (delete [this k]))
+
 (deftype Collection [db collection]
+  MCollection 
+    (delete [this k]
+      (.remove collection k)
+      (.commit db))
   clojure.lang.ISeq
     (next [this]
       (next (seq this)))

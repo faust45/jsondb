@@ -29,6 +29,10 @@
       (-> (resp/redirect "/admin") (assoc :session (:id user)))
       (utils/json-resp "fail")))
 
+(defn signout
+  [req]
+  (-> (resp/redirect-after-post "/login") (assoc :session nil)))
+
 (defsigned admin
   []
   (resp/file-response "index.html" {:root "www"}))
@@ -50,6 +54,7 @@
 (def my-routes
   (routes (GET  "/admin/places/:id" [id :as req] (admin-place req id))
           (GET  "/admin/profile" [] admin-profile)
+          (DELETE "/admin/signout" [] signout)
           (POST "/admin/places/:id" [id :as req] (update-place req id (:doc req)))
           (POST "/admin/upload/:id/:image-type" [id image-type :as req] (upload req id (:tempfile req) (keyword image-type)))
           (GET  "/login"  [] (resp/file-response "login.html" {:root "www"}))
@@ -69,3 +74,6 @@
   (run-jetty app {:port 8080}))
 
 
+(defn u
+  []
+  (models/all User))

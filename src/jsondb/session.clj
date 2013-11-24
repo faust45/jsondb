@@ -8,6 +8,6 @@
     (reify SessionStore
       (read-session   [_ k]   (coll k))
       (write-session  [_ k v] (coll (or k (java.util.UUID/randomUUID)) v))
-      (delete-session [_ k] ()))))
+      (delete-session [_ k]   (db/delete coll k)))))
 
 

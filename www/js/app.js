@@ -2,6 +2,15 @@ l = console.log;
 
 app = angular.module('PersonalMenu', ['ui.utils', 'ui.bootstrap', 'PersonalMenuServices', 'Files']);
 
+app.run(function($rootScope, $http, $location) {
+   $rootScope.log = console.log;
+   $rootScope.signout = function() {
+       $http.delete('/admin/signout').success(function() {
+           location.reload();
+       });
+   };
+});
+
 app.filter('normalize', function() {
   return function(input) {
       var value = input.replace(/\<.*?\>/g, "").replace(/\&.*?\;/g, "");
