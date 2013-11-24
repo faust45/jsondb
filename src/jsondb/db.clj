@@ -8,14 +8,25 @@
   []
   (str (-> (java.util.Date.) .getTime) (int (* (rand) 100))))
 
-(defprotocol MCollection 
+(defprotocol DBCollection 
+  (put [this k v])
+  (get [this k])
   (delete [this k]))
 
-(deftype Collection [db collection]
-  MCollection 
+(deftype MapDBCollection [db collection]
+  DBCollection 
     (delete [this k]
       (.remove collection k)
       (.commit db))
+    (get
+      [this k]
+      (if k (.get collection (str k))))
+    (put
+      [this k v]
+      (let [key (or k (id))]
+        (.put collection (str key) v)
+        (.commit db)
+        key))
   clojure.lang.ISeq
     (next [this]
       (next (seq this)))
@@ -24,17 +35,7 @@
   clojure.lang.Seqable
     (seq [this] 
       (seq (.values collection)))
-  clojure.lang.IFn
-    (invoke
-      [this k]
-      (if k (.get collection (str k))))
-    (invoke
-      [this k v]
-      (let [key (or k (id))]
-        (.put collection (str key) v)
-        (.commit db)
-        key))
-  Object
+      Object
     (toString [this] collection))
 
 
@@ -53,7 +54,7 @@
     (collection db coll-name (jsondb.serializer.Map.)))
   ([db coll-name serializer]
     (let [m (.makeOrGet (doto (.createHashMap db coll-name) (.valueSerializer serializer)))]
-      (Collection. db m))))
+      (MapDBCollection. db m))))
 
 (def collections (atom {}))
 

@@ -34,7 +34,7 @@
 
 (defn get
   [klass id]
-  ((collection klass) id))
+  (db/get (collection klass) id))
 
 (defn all
   ([klass]
@@ -45,7 +45,7 @@
 
 (defn save
   [model]
-  ((collection model) (:id model) model)
+  (db/put (collection model) (:id model) model)
   model)
 
 (defn uniq?
@@ -87,7 +87,7 @@
 
 (defn auth
   [klass id password]
-  (if-let [doc ((collection klass) id)]
+  (if-let [doc (get klass id)]
      (if (valid-pass? doc password)
        doc)))
 

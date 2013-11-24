@@ -6,8 +6,8 @@
   [path]
   (let [coll (db/collection (db/open path) "all")]
     (reify SessionStore
-      (read-session   [_ k]   (coll k))
-      (write-session  [_ k v] (coll (or k (java.util.UUID/randomUUID)) v))
+      (read-session   [_ k]   (db/get coll k))
+      (write-session  [_ k v] (db/put coll (or k (java.util.UUID/randomUUID)) v))
       (delete-session [_ k]   (db/delete coll k)))))
 
 
