@@ -16,10 +16,14 @@
   [req]
   (re-find #"application/octet-stream" (-> req :content-type str)))
 
+(defn is-post?
+  [req]
+  (= (:request-method req) :post))
+
 (defn try-parse-json
   [req]
-  (if (is-json? req) 
-      (assoc req :doc (json/read-str (slurp (:body req))))
+  (if (and (is-post? req) (is-json? req))
+      (assoc-in req [:params :doc] (-> (:body req) slurp json/read-str clojure.walk/keywordize-keys))
       req))
 
 (defn save-tmp
