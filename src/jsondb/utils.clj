@@ -107,3 +107,49 @@
   (try
     (BCrypt/checkpw raw encrypted)
     (catch Exception e)))
+
+;(defn conj-attr
+;  [model attr value]
+;  (update-in model [(keyword attr)] (comp #(conj % value) set)))
+;
+;(defn uniq?
+;  [model]
+;  (let [doc ((collection model) (:id model))]
+;    (if doc
+;      (assoc model :errors {:id "not uniq"})
+;      model)))
+;
+;(defmacro model->
+;  [expr & forms]
+;  (let [g (gensym)
+;        pstep (fn [step] `(if (-> ~g :errors empty? not) ~g (-> ~g ~step)))]
+;    `(let [~g ~expr
+;           ~@(interleave (repeat g) (map pstep forms))]
+;       ~g)))
+;
+;
+;(defn assign-id
+;  [model]
+;  (if (:id model)
+;    model
+;    (assoc model :id (utils/gen-id))))
+;
+;(defn write-to-db
+;  [model]
+;  (db/put (collection model) (:id model) model))
+;
+;(defmulti  collection-name class)
+;(defmethod collection-name Class
+;  [model]
+;  (->> model str (re-find #"\w+$") .toLowerCase plural))
+;(defmethod collection-name :default 
+;  [model]
+;  (collection-name (class model)))
+;
+;(def collection (comp db/collection-by-name collection-name))
+;
+(defn id
+  []
+  (str (-> (java.util.Date.) .getTime) (int (* (rand) 100))))
+
+

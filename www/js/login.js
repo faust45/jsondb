@@ -6,8 +6,7 @@ function LoginC($scope, $http) {
     $scope.login = function() {
        $http.post("/login", $scope.user)
            .success(function () {
-               console.log("success");
-               location.replace("/admin");
+               document.location = "/admin";
            })
            .error(function() {
                $scope.authFail = true;

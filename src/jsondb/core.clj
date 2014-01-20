@@ -19,6 +19,9 @@
   (:gen-class))
 
 
+(model/all user places)
+(save {})
+
 (defsigned upload
   [id file label]
   (->> (models/images label) (map #(actions/process-images % file id)) (apply merge) utils/json-resp))
@@ -52,6 +55,18 @@
   (let [old (models/get Place id) 
         d (clojure.walk/keywordize-keys doc)]
     (-> (jsondb.places/new d) (models/update old) utils/json-resp)))
+
+(put places (user {}))
+((user places))
+place 
+(if (can-edit? user place)
+  ()
+  ())
+
+(collection 'Place (user))
+
+Place user_id
+
 
 (def my-routes
   (routes (GET  "/admin/places/:id" [id :as req] (admin-place req id))

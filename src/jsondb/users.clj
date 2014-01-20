@@ -9,7 +9,7 @@
   [user]
   (->> (:password user) utils/encrypt (assoc user :encrypted_password)))
 
-(def valid-user 
+(def valid-user
   {:create (validation-set
              (presence-of :email)
              (presence-of :password))
@@ -31,3 +31,10 @@
 (defn new
   [attrs]
   (map->User attrs))
+
+(defn auth
+  [klass id password]
+  (if-let [doc (get klass id)]
+     (if (valid-pass? doc password)
+       doc)))
+

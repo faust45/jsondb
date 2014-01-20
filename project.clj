@@ -3,6 +3,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :jvm-opts ["-Djava.compiler=NONE"]
   :dependencies [ 
                   [com.novemberain/validateur "1.2.0"]
                   [inflections "0.9.5"]
@@ -11,7 +12,7 @@
                   [sonian/carica "1.0.3"]
                   [clj-aws-s3 "0.3.7"]
                   [org.imgscalr/imgscalr-lib "4.2"]
-                  [org.mapdb/mapdb "0.9.6"]
+                  [com.novemberain/monger "1.5.0"]
                   [org.yaml/snakeyaml "1.9"]
                   [org.apache.lucene/lucene-analyzers-common "4.2.0"]
                   [org.apache.lucene/lucene-core "4.2.0"]
